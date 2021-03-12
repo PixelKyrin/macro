@@ -1,8 +1,10 @@
 import tkinter as tk
 
 key = ""
+selected = -1
 ListBox_index = 0
 
+#키보드 추가 함수
 def Add_Keyboard():
     def key_down(e):
         global key
@@ -39,10 +41,36 @@ def Add_Keyboard():
 
     win_AddKey.mainloop()
 
+#ListBox 내용 삭제 함수
+def Delete_ListBox():
+    global selected
+    if selected >= 0:  # Check this still isn't -1
+        listBox.delete(selected)
+        selected = -1
+    else:
+        print("Error", "Can't delete the selected item if you haven't selected anything!")
+
+
+#ListBox seleted 함수
+def list_clicked(e):
+    print(e)
+    global selected
+    selected = int(listBox.curselection()[0])  # item number selected in list
+    item = listBox.get(selected)  # text of selected item
+    print(f"You have clicked item {selected} which is {item}")
+
+
 #tk 기본 설정
 win = tk.Tk()
 win.title("Py Macro")
 win.geometry("250x190")
+
+#listbox 생성
+listBox = tk.Listbox(win)
+listBox.place(x=13, y=17, width=130, height=140)
+
+#selected is ListBox element
+listBox.bind('<<ListboxSelect>>', list_clicked)
 
 #키보드 추가 박스 생성
 Key_Box = tk.Button(win, text="키보드", borderwidth=2, command=Add_Keyboard)
@@ -57,11 +85,7 @@ Mouse_Box = tk.Button(win, text="시간", borderwidth=2)
 Mouse_Box.place(x=155, y=87, width=70, height=30)
 
 #지우기 박스 생성
-Mouse_Box = tk.Button(win, text="지우기", borderwidth=2)
+Mouse_Box = tk.Button(win, text="지우기", borderwidth=2, command=Delete_ListBox)
 Mouse_Box.place(x=155, y=122, width=70, height=30)
-
-#listbox 생성
-listBox = tk.Listbox(win)
-listBox.place(x=13, y=17, width=130, height=140)
 
 tk.mainloop()
