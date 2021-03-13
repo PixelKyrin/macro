@@ -1,24 +1,21 @@
+import keyboard
 import tkinter as tk
 
 key = ""
 selected = -1
-ListBox_index = 0
 
 #키보드 추가 함수
 def Add_Keyboard():
     def key_down(e):
         global key
-        key = e.keysym
-        print("키 입력 : " + str(key))
 
-    def main_proc():
-        AddKey_Text["text"] = key
-        win_AddKey.after(100, main_proc)
+        if key != e.keysym:
+            key = e.keysym
+            AddKey_Text["text"] = key
+            print("키 입력 : " + str(key))
 
     def Add_ListBox():
-        global ListBox_index
-        ListBox_index += 1
-        listBox.insert(ListBox_index, key)
+        listBox.insert(tk.END, key)
         win_AddKey.destroy()
 
     win_AddKey = tk.Tk()
@@ -34,8 +31,6 @@ def Add_Keyboard():
     AddKey_Text.config(bg='LightGray')
     AddKey_Text.place(x=25, y=33, width=150, height=32)
 
-    main_proc() #키보드 입력 받기
-
     Add_Btn = tk.Button(master=win_AddKey, text="완료", command=Add_ListBox)
     Add_Btn.place(x=75, y=120, width=60, height=25)
 
@@ -50,7 +45,6 @@ def Delete_ListBox():
     else:
         print("Error", "Can't delete the selected item if you haven't selected anything!")
 
-
 #ListBox seleted 함수
 def list_clicked(e):
     print(e)
@@ -58,6 +52,18 @@ def list_clicked(e):
     selected = int(listBox.curselection()[0])  # item number selected in list
     item = listBox.get(selected)  # text of selected item
     print(f"You have clicked item {selected} which is {item}")
+
+#특정 키를 눌렀을 때, 매크로 시작하기
+def Macro_Start():
+    win.after(100, Macro_Start)
+
+    if keyboard.is_pressed('F3'):
+        for i in range(listBox.size()):
+            item = listBox.get(i)
+            print(f'now i is {i} | and | item is {item}')
+
+            keyboard.press_and_release(item)
+
 
 
 #tk 기본 설정
@@ -87,5 +93,8 @@ Mouse_Box.place(x=155, y=87, width=70, height=30)
 #지우기 박스 생성
 Mouse_Box = tk.Button(win, text="지우기", borderwidth=2, command=Delete_ListBox)
 Mouse_Box.place(x=155, y=122, width=70, height=30)
+
+#매크로 실행
+Macro_Start()
 
 tk.mainloop()
