@@ -3,6 +3,7 @@ import tkinter as tk
 
 key = ""
 selected = -1
+special_keys={}
 
 #키보드 추가 함수
 def Add_Keyboard():
@@ -57,19 +58,42 @@ def list_clicked(e):
 def Macro_Start():
     win.after(100, Macro_Start)
 
-    if keyboard.is_pressed('F3'):
+    if keyboard.is_pressed(special_keys['start']):
         for i in range(listBox.size()):
             item = listBox.get(i)
             print(f'now i is {i} | and | item is {item}')
 
             keyboard.press_and_release(item)
-
-
+#옵션가져오기 
+def Get_Option():
+    global special_keys
+    try:
+        f=open("option.txt",'r')
+        cup=list(f.readline().strip('\n'),split())
+        while cup!=list(''):
+            special_keys[cup[0]]=cup[2]
+            cup=list(f.readline().strip('\n'),split())
+        f.close()
+        print(special_keys)
+    except: #첫 실행시 또는 옵션txt파일에 문제 있을 시 초기화후 실행
+        f=open("option.txt",'w')
+        f.write('start = F3\n')
+        f.write('stop = F2\n')
+        f.close()
+        f=open("option.txt",'r')
+        cup=list(f.readline().strip('\n').split())
+        while cup!=list(''):
+            special_keys[cup[0]]=cup[2]
+            cup=list(f.readline().strip('\n').split())
+        f.close()
+        print(special_keys)
 
 #tk 기본 설정
 win = tk.Tk()
 win.title("Py Macro")
 win.geometry("250x190")
+#옵션 가져오기
+Get_Option()
 
 #listbox 생성
 listBox = tk.Listbox(win)
