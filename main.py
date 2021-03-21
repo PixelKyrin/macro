@@ -6,22 +6,24 @@ selected = -1
 special_keys={}
 str_Option = 0
 cup = "" 
+
 #키보드 추가 함수
 def Add_Key(fun,caller):# caller= 부르는 곳으로 설정 ex)ListBox, Option
     global key,str_Option
     
     if key != "":
         key = ""
-        
+
     def Change_Str():
         global str_Option
         if str_Option == 0:
             str_Option = 1
         else:
             str_Option = 0
+
         win_AddKey.destroy()
         Add_Keyboard()
-    
+
     def key_down(e):
         global str_Option
 
@@ -40,6 +42,7 @@ def Add_Key(fun,caller):# caller= 부르는 곳으로 설정 ex)ListBox, Option
                 listBox.insert(tk.END, " str : " + en_AddStr.get())
         except:
             fun()
+
         win_AddKey.destroy()
         
     win_AddKey = tk.Tk()
@@ -58,10 +61,12 @@ def Add_Key(fun,caller):# caller= 부르는 곳으로 설정 ex)ListBox, Option
         bu_Change.place(x=52, y=68)
     elif "Option" in caller:
         str_Option=0
+
     if str_Option == 0:
         AddKey_Text = tk.Label(master=win_AddKey, text=' ', font=("System", 5), relief='sunken')
         AddKey_Text.config(bg='LightGray')
         AddKey_Text.place(x=25, y=33, width=150, height=32)
+
     else:
         en_AddStr = tk.Entry(master=win_AddKey, font=("System", 5), relief='sunken', justify='center')
         en_AddStr.config(bg='LightGray')
@@ -69,6 +74,7 @@ def Add_Key(fun,caller):# caller= 부르는 곳으로 설정 ex)ListBox, Option
 
 
     Add_Btn = tk.Button(master=win_AddKey, text="완료", command=CompleteGetKey)
+
     Add_Btn.place(x=70, y=120, width=60, height=25)
 
     win_AddKey.mainloop()
@@ -82,7 +88,7 @@ def Add_Keyboard():
 #ListBox 내용 삭제 함수
 def Delete_ListBox():
     global selected
-    
+
     if selected >= 0:  # Check this still isn't -1
         listBox.delete(selected)
         selected = -1
@@ -95,7 +101,7 @@ def list_clicked(e):
     global selected
     selected = int(listBox.curselection()[0])  # item number selected in list
     item = listBox.get(selected)  # text of selected item
-    print(f"You have clicked item {selected} which is {item}")
+    print(f"You have clicked item {selected} which is {item} | type is {type(item)}")
 
 #특정 키를 눌렀을 때, 매크로 시작하기
 def Macro_Start():
@@ -112,6 +118,7 @@ def Macro_Start():
                 keyboard.write(item_Content)
             elif item_Formet == 'key':
                 keyboard.press_and_release(item_Content)
+
 #옵션가져오기 
 def Get_Option():
     global special_keys
@@ -190,7 +197,6 @@ def Open_option():
 win = tk.Tk()
 win.title("Py Macro")
 win.geometry("250x190")
-
 
 #옵션 가져오기
 Get_Option()
